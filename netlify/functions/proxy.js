@@ -7,13 +7,17 @@ exports.handler = async (event) => {
   try {
     let params = {};
 
-    // Jika request dari client adalah POST, ambil body JSON
+    // Tangani request POST
     if (event.httpMethod === 'POST') {
       if (event.body) {
-        params = JSON.parse(event.body);
+        try {
+          params = JSON.parse(event.body);
+        } catch (e) {
+          params = {}; // jika body bukan JSON, gunakan object kosong
+        }
       }
     } else {
-      // Jika GET, ambil parameter dari query string
+      // Tangani request GET
       const url = new URL(event.path, `https://${event.headers.host}`);
       params = Object.fromEntries(url.searchParams);
     }
@@ -21,12 +25,10 @@ exports.handler = async (event) => {
     // Pastikan action selalu ada
     if (!params.action) {
       const url = new URL(event.path, `https://${event.headers.host}`);
-      params.action = url.searchParams.get('action');
+      params.action = url.searchParams.get('action') || '';
     }
 
-    const action = params.action || '';
-
-    // Jika request asli adalah POST, selalu kirim POST ke Apps Script
+    // SELALU kirim POST ke Apps Script jika metode asli POST
     if (event.httpMethod === 'POST') {
       const response = await fetch(APPS_SCRIPT_URL, {
         method: 'POST',
@@ -45,7 +47,7 @@ exports.handler = async (event) => {
       };
     }
 
-    // Untuk GET, gunakan query string ke Apps Script
+    // Untuk GET, gunakan query string
     const queryString = new URLSearchParams(params).toString();
     const targetUrl = APPS_SCRIPT_URL + (queryString ? `?${queryString}` : '');
 

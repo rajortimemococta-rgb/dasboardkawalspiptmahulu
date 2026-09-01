@@ -1482,6 +1482,23 @@ input[type="file"]:hover {
   from { opacity: 0; transform: translateY(-2px); }
   to { opacity: 1; transform: translateY(0); }
 }
+   /* Indikator simpan per kolom */
+.save-indicator {
+  display: inline-block;
+  margin-left: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  transition: opacity 0.3s;
+}
+.save-indicator.saving {
+  color: #f59e0b; /* Oranye = sedang menyimpan */
+}
+.save-indicator.success {
+  color: #10b981; /* Hijau = berhasil */
+}
+.save-indicator.error {
+  color: #ef4444; /* Merah = gagal */
+}
 </style>
 </head>
 <body>
@@ -2075,10 +2092,28 @@ function selectHtml(id, field, value, options) {
 }
 
 function attachHandlers() {
-  // ====== HANDLER INPUT (MRI, IEPK) ======
-  document.querySelectorAll('input[data-id]').forEach(el => {
-    if (el.dataset.field === 'sa') return; // SA tidak bisa diubah
+  // Helper untuk menampilkan indikator
+  function showIndicator(target, text, className) {
+    // Hapus indikator lama jika ada
+    let ind = target.parentNode.querySelector('.save-indicator');
+    if (!ind) {
+      ind = document.createElement('span');
+      ind.className = 'save-indicator';
+      target.parentNode.appendChild(ind);
+    }
+    ind.textContent = text;
+    ind.className = 'save-indicator ' + className;
+    // Auto hapus setelah 2 detik jika sukses/gagal
+    if (className === 'success' || className === 'error') {
+      setTimeout(() => {
+        ind.remove();
+      }, 2000);
+    }
+  }
 
+  // INPUT (MRI, IEPK)
+  document.querySelectorAll('input[data-id]').forEach(el => {
+    if (el.dataset.field === 'sa') return; // SA readonly tidak diubah
     el.onchange = (e) => {
       const id = e.target.dataset.id;
       const field = e.target.dataset.field;
@@ -2086,35 +2121,33 @@ function attachHandlers() {
       if (!row) return;
 
       let val = e.target.value;
-      if (field === 'mri' || field === 'iepk') {
-        val = parseFloat(val) || 0;
-      } else {
-        val = e.target.value;
-      }
+      if (field === 'mri' || field === 'iepk') val = parseFloat(val) || 0;
+      else val = e.target.value;
       row[field] = val;
 
-      // Kirim langsung ke server per kolom
+      // Tampilkan indikator "Menyimpan..."
+      showIndicator(e.target, '⏳ Menyimpan...', 'saving');
+
+      // Kirim ke server
       callServer('saveField', { opdId: id, field: field, value: val, year: currentYear })
         .then(res => {
           if (res.status === 'error') {
+            showIndicator(e.target, '✗ Gagal', 'error');
             console.error('Gagal simpan field:', res.message);
           } else {
-            // Tampilkan indikator sukses
-            const indicator = document.createElement('span');
-            indicator.className = 'saved-indicator';
-            indicator.textContent = '✓';
-            e.target.parentNode.appendChild(indicator);
-            setTimeout(() => indicator.remove(), 1500);
+            showIndicator(e.target, '✓', 'success');
           }
         })
-        .catch(err => console.error('Error saveField:', err));
+        .catch(err => {
+          showIndicator(e.target, '✗ Gagal', 'error');
+          console.error('Error saveField:', err);
+        });
     };
-
-    // Saat blur, cek apakah ada perubahan dari device lain
+    // Saat blur, sinkronkan dari server (tapi jangan ganggu input lain)
     el.addEventListener('blur', syncData);
   });
 
-  // ====== HANDLER SELECT (EVIDENCE, QA APIP, RTP, STATUS) ======
+  // SELECT (Evidence, QA APIP, RTP, Status)
   document.querySelectorAll('select[data-id]').forEach(el => {
     el.onchange = (e) => {
       const id = e.target.dataset.id;
@@ -2124,24 +2157,25 @@ function attachHandlers() {
 
       row[field] = e.target.value;
 
-      // Kirim langsung ke server per kolom
+      // Tampilkan indikator "Menyimpan..."
+      showIndicator(e.target, '⏳ Menyimpan...', 'saving');
+
+      // Kirim ke server
       callServer('saveField', { opdId: id, field: field, value: e.target.value, year: currentYear })
         .then(res => {
           if (res.status === 'error') {
+            showIndicator(e.target, '✗ Gagal', 'error');
             console.error('Gagal simpan field:', res.message);
           } else {
-            // Tampilkan indikator sukses
-            const indicator = document.createElement('span');
-            indicator.className = 'saved-indicator';
-            indicator.textContent = '✓';
-            e.target.parentNode.appendChild(indicator);
-            setTimeout(() => indicator.remove(), 1500);
+            showIndicator(e.target, '✓', 'success');
           }
         })
-        .catch(err => console.error('Error saveField:', err));
+        .catch(err => {
+          showIndicator(e.target, '✗ Gagal', 'error');
+          console.error('Error saveField:', err);
+        });
     };
-
-    // Saat blur, cek apakah ada perubahan dari device lain
+    // Saat blur, sinkronkan dari server (tapi jangan ganggu input lain)
     el.addEventListener('blur', syncData);
   });
 }

@@ -1996,6 +1996,12 @@ async function saveData() {
     }
   }
 }
+   // ====== SINKRONISASI CEPAT SAAT BLUR ======
+async function syncData() {
+  if (isSaving || pendingSave) return;
+  // Muat ulang data dari server untuk mendapatkan perubahan dari perangkat lain
+  await loadData();
+}
 // ====== RENDER TABEL ======
 function render() {
   const tbody = document.getElementById('tableBody');
@@ -2066,6 +2072,8 @@ function attachHandlers() {
       else row[field] = e.target.value;
       debounceSave();
     };
+    // Tambahkan blur untuk sinkronisasi cepat
+    el.addEventListener('blur', syncData);
   });
   document.querySelectorAll('select[data-id]').forEach(el => {
     el.onchange = (e) => {
@@ -2074,6 +2082,8 @@ function attachHandlers() {
       row[field] = e.target.value;
       debounceSave();
     };
+    // Tambahkan blur untuk sinkronisasi cepat
+    el.addEventListener('blur', syncData);
   });
 }
 
@@ -2956,6 +2966,17 @@ if (urlParams.get('access') === 'portal') {
     }
   })();
 }
+   // ====== SINKRONISASI OTOMATIS SETIAP 5 DETIK ======
+setInterval(async function() {
+  if (!isSaving && !pendingSave) {
+    const activeElement = document.activeElement;
+    // Jangan reload jika sedang fokus di input/textarea/select
+    if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA' || activeElement.tagName === 'SELECT')) {
+      return;
+    }
+    await loadData();
+  }
+}, 5000);
 </script>
 </body>
 </html>

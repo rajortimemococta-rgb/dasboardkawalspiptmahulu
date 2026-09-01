@@ -1,23 +1,23 @@
 // netlify/functions/proxy.js
 const https = require('https');
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzsnV0RtLDyo6epqyZOUZ5-TIS6FJwLtGVuELwOS5fZuEqPQ2887UIU70wm6McoEZxHGw/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxzHdpP3bEl5CGIDpTeQTXRGx1VlO9AQLK4fEEWlKDlNqmZRu0CLb3lAl9X6DUFwKLY/exec';
 
 exports.handler = async (event) => {
   try {
     let params = {};
 
-    // Tangani request POST
+    // Jika request dari client adalah POST, ambil body JSON
     if (event.httpMethod === 'POST') {
       if (event.body) {
         try {
           params = JSON.parse(event.body);
         } catch (e) {
-          params = {}; // jika body bukan JSON, gunakan object kosong
+          params = {};
         }
       }
     } else {
-      // Tangani request GET
+      // Jika GET, ambil parameter dari query string
       const url = new URL(event.path, `https://${event.headers.host}`);
       params = Object.fromEntries(url.searchParams);
     }
@@ -27,6 +27,8 @@ exports.handler = async (event) => {
       const url = new URL(event.path, `https://${event.headers.host}`);
       params.action = url.searchParams.get('action') || '';
     }
+
+    const action = params.action || '';
 
     // SELALU kirim POST ke Apps Script jika metode asli POST
     if (event.httpMethod === 'POST') {
@@ -47,7 +49,7 @@ exports.handler = async (event) => {
       };
     }
 
-    // Untuk GET, gunakan query string
+    // Untuk GET, gunakan query string ke Apps Script
     const queryString = new URLSearchParams(params).toString();
     const targetUrl = APPS_SCRIPT_URL + (queryString ? `?${queryString}` : '');
 

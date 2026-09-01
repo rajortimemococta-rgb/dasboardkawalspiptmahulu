@@ -2064,7 +2064,7 @@ async function saveData() {
       status.textContent = '⚠️ ' + result.message;
       throw new Error(result.message);
     }
-    status.textContent = '✅ ' + result.message;
+    status.textContent = '✅ Data tersimpan';
     originalRows = JSON.parse(JSON.stringify(rows));
     updateKpisLocal();
     setTimeout(() => { if (status.textContent.startsWith('✅')) status.textContent = ''; }, 2000);
@@ -2077,16 +2077,6 @@ async function saveData() {
       saveData();
     }
   }
-}
-
-// ====== SINKRONISASI CEPAT (TANPA MENIMPA) ======
-async function syncData() {
-  if (isSaving || pendingSave) return;
-  const activeElement = document.activeElement;
-  if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA' || activeElement.tagName === 'SELECT')) {
-    return;
-  }
-  await loadData();
 }
 
 // ====== RENDER TABEL ======
@@ -3107,7 +3097,7 @@ setInterval(async function() {
     }
     await loadData();
   }
-}, 5000);
+}, 20000);
 </script>
 </body>
 </html>

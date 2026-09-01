@@ -1499,6 +1499,48 @@ input[type="file"]:hover {
 .save-indicator.error {
   color: #ef4444; /* Merah = gagal */
 }
+   /* ============================================================
+   TAMPILAN BARIS TABEL – GRADIEN WARNA BERBEDA PER OPD
+   ============================================================ */
+tbody tr {
+  transition: all 0.3s ease;
+}
+
+/* Baris 1 – Biru Muda Elegan */
+tbody tr:nth-child(4n+1) td {
+  background: linear-gradient(90deg, #eff6ff 0%, #f8fafc 100%);
+  border-bottom: 1px solid #e0e7ff;
+}
+
+/* Baris 2 – Hijau Muda Segar */
+tbody tr:nth-child(4n+2) td {
+  background: linear-gradient(90deg, #ecfdf5 0%, #f8fafc 100%);
+  border-bottom: 1px solid #d1fae5;
+}
+
+/* Baris 3 – Kuning Lembut Hangat */
+tbody tr:nth-child(4n+3) td {
+  background: linear-gradient(90deg, #fffbeb 0%, #f8fafc 100%);
+  border-bottom: 1px solid #fef3c7;
+}
+
+/* Baris 4 – Ungu Pastel Menawan */
+tbody tr:nth-child(4n+4) td {
+  background: linear-gradient(90deg, #f5f3ff 0%, #f8fafc 100%);
+  border-bottom: 1px solid #ede9fe;
+}
+
+/* Warna teks pada baris agar tetap terbaca */
+tbody td {
+  color: #1e293b;
+}
+
+/* Efek hover – sorot baris dengan bayangan lembut */
+tbody tr:hover td {
+  background: #f8fafc !important;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.03);
+  cursor: default;
+}
 </style>
 </head>
 <body>

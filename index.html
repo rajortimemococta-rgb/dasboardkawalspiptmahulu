@@ -1469,6 +1469,19 @@ input[type="file"]:hover {
   font-size: 18px;
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
+   /* ===== INDIKATOR SUKSES SIMPAN ===== */
+.saved-indicator {
+  color: #10b981;
+  font-size: 12px;
+  font-weight: bold;
+  margin-left: 4px;
+  display: inline-block;
+  animation: savedFadeIn 0.3s ease;
+}
+@keyframes savedFadeIn {
+  from { opacity: 0; transform: translateY(-2px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 </style>
 </head>
 <body>
@@ -1961,30 +1974,17 @@ async function saveData() {
   const year = currentYear;
 
   try {
-    // Hitung perubahan (delta) - hanya kirim baris yang berubah
-    const changedRows = [];
-    rows.forEach((currentRow) => {
-      const originalRow = originalRows.find(r => r.id === currentRow.id);
-      if (!originalRow || JSON.stringify(currentRow) !== JSON.stringify(originalRow)) {
-        currentRow.updatedAt = Date.now();
-        changedRows.push(currentRow);
-      }
-    });
-
-    // Kirim hanya delta ke server
-    const result = await callServer('saveData', { rows: JSON.stringify(changedRows), year });
+    // Kita TIDAK mengirim seluruh rows lagi.
+    // Fungsi saveData sekarang tidak dipakai untuk perubahan kolom,
+    // tapi masih dipakai untuk menambah OPD baru.
+    const result = await callServer('saveData', { rows: JSON.stringify(rows), year });
     if (result.status === 'error') {
       status.textContent = '⚠️ ' + result.message;
       throw new Error(result.message);
     }
     status.textContent = '✅ ' + result.message;
-
-    // Perbarui salinan lokal agar tidak mengirim ulang baris yang sama
     originalRows = JSON.parse(JSON.stringify(rows));
-
-    // JANGAN loadData()! HANYA update KPI agar cepat
     updateKpisLocal();
-
     setTimeout(() => { if (status.textContent.startsWith('✅')) status.textContent = ''; }, 2000);
   } catch (err) {
     status.textContent = '⚠️ ' + err.message;
@@ -1995,6 +1995,18 @@ async function saveData() {
       saveData();
     }
   }
+}
+   // ====== SINKRONISASI CEPAT (TANPA MENIMPA) ======
+async function syncData() {
+  if (isSaving || pendingSave) return;
+  // Simpan dulu nilai yang sedang aktif di input
+  const activeElement = document.activeElement;
+  if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA' || activeElement.tagName === 'SELECT')) {
+    // Jika sedang fokus, jangan sinkronkan agar tidak mengganggu
+    return;
+  }
+  // Ambil data terbaru dari server
+  await loadData();
 }
    // ====== SINKRONISASI CEPAT SAAT BLUR ======
 async function syncData() {
@@ -2063,26 +2075,73 @@ function selectHtml(id, field, value, options) {
 }
 
 function attachHandlers() {
+  // ====== HANDLER INPUT (MRI, IEPK) ======
   document.querySelectorAll('input[data-id]').forEach(el => {
-    if (el.dataset.field === 'sa') return;
+    if (el.dataset.field === 'sa') return; // SA tidak bisa diubah
+
     el.onchange = (e) => {
-      const id = e.target.dataset.id, field = e.target.dataset.field, row = rows.find(r => r.id === id);
+      const id = e.target.dataset.id;
+      const field = e.target.dataset.field;
+      const row = rows.find(r => r.id === id);
       if (!row) return;
-      if (field === 'mri' || field === 'iepk') row[field] = parseFloat(e.target.value) || 0;
-      else row[field] = e.target.value;
-      debounceSave();
+
+      let val = e.target.value;
+      if (field === 'mri' || field === 'iepk') {
+        val = parseFloat(val) || 0;
+      } else {
+        val = e.target.value;
+      }
+      row[field] = val;
+
+      // Kirim langsung ke server per kolom
+      callServer('saveField', { opdId: id, field: field, value: val, year: currentYear })
+        .then(res => {
+          if (res.status === 'error') {
+            console.error('Gagal simpan field:', res.message);
+          } else {
+            // Tampilkan indikator sukses
+            const indicator = document.createElement('span');
+            indicator.className = 'saved-indicator';
+            indicator.textContent = '✓';
+            e.target.parentNode.appendChild(indicator);
+            setTimeout(() => indicator.remove(), 1500);
+          }
+        })
+        .catch(err => console.error('Error saveField:', err));
     };
-    // Tambahkan blur untuk sinkronisasi cepat
+
+    // Saat blur, cek apakah ada perubahan dari device lain
     el.addEventListener('blur', syncData);
   });
+
+  // ====== HANDLER SELECT (EVIDENCE, QA APIP, RTP, STATUS) ======
   document.querySelectorAll('select[data-id]').forEach(el => {
     el.onchange = (e) => {
-      const id = e.target.dataset.id, field = e.target.dataset.field, row = rows.find(r => r.id === id);
+      const id = e.target.dataset.id;
+      const field = e.target.dataset.field;
+      const row = rows.find(r => r.id === id);
       if (!row) return;
+
       row[field] = e.target.value;
-      debounceSave();
+
+      // Kirim langsung ke server per kolom
+      callServer('saveField', { opdId: id, field: field, value: e.target.value, year: currentYear })
+        .then(res => {
+          if (res.status === 'error') {
+            console.error('Gagal simpan field:', res.message);
+          } else {
+            // Tampilkan indikator sukses
+            const indicator = document.createElement('span');
+            indicator.className = 'saved-indicator';
+            indicator.textContent = '✓';
+            e.target.parentNode.appendChild(indicator);
+            setTimeout(() => indicator.remove(), 1500);
+          }
+        })
+        .catch(err => console.error('Error saveField:', err));
     };
-    // Tambahkan blur untuk sinkronisasi cepat
+
+    // Saat blur, cek apakah ada perubahan dari device lain
     el.addEventListener('blur', syncData);
   });
 }
@@ -2966,11 +3025,10 @@ if (urlParams.get('access') === 'portal') {
     }
   })();
 }
-   // ====== SINKRONISASI OTOMATIS SETIAP 5 DETIK ======
+// ====== SINKRONISASI OTOMATIS SETIAP 5 DETIK ======
 setInterval(async function() {
   if (!isSaving && !pendingSave) {
     const activeElement = document.activeElement;
-    // Jangan reload jika sedang fokus di input/textarea/select
     if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA' || activeElement.tagName === 'SELECT')) {
       return;
     }

@@ -301,7 +301,7 @@ table {
   border-collapse: separate;
   border-spacing: 0;
   font-size: 13px;
-  min-width: 1200px; /* Diperlebar agar input angka tidak terpotong */
+  min-width: 1200px;
 }
 
 /* HEADER TABEL – Gradien Gelap Modern */
@@ -401,7 +401,7 @@ tbody tr:hover td {
 tbody input[type="number"],
 tbody select {
   width: 100%;
-  min-width: 90px; /* Memastikan angka desimal muat */
+  min-width: 90px;
   background: rgba(255, 255, 255, 0.95);
   border: 1px solid #cbd5e1;
   border-radius: 8px;
@@ -2048,6 +2048,11 @@ function debounceSave() {
   saveTimer = setTimeout(saveData, 800);
 }
 
+// Perbaikan: definisikan syncData
+function syncData() {
+  debounceSave();
+}
+
 async function saveData() {
   if (isSaving) {
     pendingSave = true;
@@ -2184,7 +2189,7 @@ function attachHandlers() {
           console.error('Error saveField:', err);
         });
     };
-    el.addEventListener('blur', syncData);
+    el.onblur = syncData;  // Perbaikan: ganti addEventListener
   });
 
   document.querySelectorAll('select[data-id]').forEach(el => {
@@ -2211,7 +2216,7 @@ function attachHandlers() {
           console.error('Error saveField:', err);
         });
     };
-    el.addEventListener('blur', syncData);
+    el.onblur = syncData;  // Perbaikan: ganti addEventListener
   });
 }
 

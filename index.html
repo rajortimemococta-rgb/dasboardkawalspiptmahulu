@@ -287,12 +287,12 @@ button:disabled {
 }
 
 /* ============================================================
-   TABEL MODERN – WARNA KOLOM BERBEDA & SELARAS
+   TABEL MODERN – WARNA KOLOM BERBEDA & RAPI
    ============================================================ */
 .table-wrap {
   overflow-x: auto;
   border-radius: 12px;
-  border: 1px solid var(--border);
+  border: 1px solid #e2e8f0;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
@@ -314,20 +314,28 @@ thead th {
   color: #ffffff;
   background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
   padding: 16px 12px;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
   position: sticky;
   top: 0;
   z-index: 10;
 }
 
-/* ===== WARNA LATAR KOLOM ===== */
+/* ===== WARNA LATAR KOLOM (SETIAP KOLOM BERBEDA) ===== */
+tbody td {
+  padding: 12px 10px;
+  border-bottom: 1px solid #e2e8f0;
+  border-right: 1px solid #e2e8f0;
+  vertical-align: middle;
+  transition: all 0.2s ease;
+}
 
-/* Kolom Nomor (No.) */
+/* Kolom Nomor */
 tbody td:nth-child(1) {
   background: #f0f9ff;
-  font-weight: 600;
+  font-weight: 700;
   text-align: center;
   color: #0f172a;
+  border-left: 4px solid #3b82f6;
 }
 
 /* Kolom OPD */
@@ -381,24 +389,19 @@ tbody td:nth-child(10) {
 tbody td:nth-child(11),
 tbody td:nth-child(12) {
   background: #ffffff;
+  text-align: center;
 }
 
-/* ===== GARIS ANTAR BARIS ===== */
-tbody tr {
-  border-bottom: 1px solid #e2e8f0;
-  transition: all 0.2s ease;
-}
-
+/* Hover pada baris – efek menyala */
 tbody tr:hover td {
-  filter: brightness(0.95);
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.04);
+  filter: brightness(0.96);
 }
 
 /* ===== INPUT & SELECT DI DALAM TABEL ===== */
 tbody input[type="number"],
 tbody select {
   width: 100%;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95);
   border: 1px solid #cbd5e1;
   border-radius: 8px;
   padding: 8px 10px;
@@ -412,9 +415,9 @@ tbody select {
 tbody input[type="number"]:focus,
 tbody select:focus {
   outline: none;
-  border-color: var(--primary);
+  border-color: #3b82f6;
   background: #ffffff;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
 /* Input readonly (SA) */
@@ -423,7 +426,7 @@ tbody input[readonly] {
   color: #64748b;
   border: 1px solid #e2e8f0;
   cursor: not-allowed;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 /* ===== BADGE KELENGKAPAN ===== */
@@ -435,6 +438,24 @@ tbody input[readonly] {
   border-radius: 20px;
   letter-spacing: 0.3px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.badge-selesai,
+.badge-lengkap {
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+.badge-proses,
+.badge-sebagian {
+  background: var(--orange-bg);
+  color: var(--orange);
+}
+
+.badge-belum,
+.badge-kosong {
+  background: var(--red-bg);
+  color: var(--red);
 }
 
 /* ===== TOMBOL AKSI TABEL ===== */
@@ -1530,36 +1551,6 @@ input[type="file"]:hover {
   font-size: 18px;
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
-
-/* ===== INDIKATOR PROSES SIMPAN ===== */
-.save-indicator {
-  display: inline-block;
-  margin-left: 6px;
-  font-size: 12px;
-  font-weight: 600;
-  transition: opacity 0.3s;
-}
-.save-indicator.saving {
-  color: #f59e0b; /* Oranye = sedang menyimpan */
-}
-.save-indicator.success {
-  color: #10b981; /* Hijau = berhasil */
-}
-.save-indicator.error {
-  color: #ef4444; /* Merah = gagal */
-}
-.saved-indicator {
-  color: #10b981;
-  font-size: 12px;
-  font-weight: bold;
-  margin-left: 4px;
-  display: inline-block;
-  animation: savedFadeIn 0.3s ease;
-}
-@keyframes savedFadeIn {
-  from { opacity: 0; transform: translateY(-2px); }
-  to { opacity: 1; transform: translateY(0); }
-}
 </style>
 </head>
 <body>
@@ -2051,7 +2042,6 @@ async function saveData() {
   const year = currentYear;
 
   try {
-    // Kirim seluruh rows untuk penambahan OPD baru (fitur tambah)
     const result = await callServer('saveData', { rows: JSON.stringify(rows), year });
     if (result.status === 'error') {
       status.textContent = '⚠️ ' + result.message;
@@ -2072,15 +2062,13 @@ async function saveData() {
   }
 }
 
-// ====== SINKRONISASI CEPAT ======
+// ====== SINKRONISASI CEPAT (TANPA MENIMPA) ======
 async function syncData() {
   if (isSaving || pendingSave) return;
-  // Jangan sinkronkan jika sedang fokus di input/select
   const activeElement = document.activeElement;
   if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA' || activeElement.tagName === 'SELECT')) {
     return;
   }
-  // Ambil data terbaru dari server
   await loadData();
 }
 
@@ -2123,7 +2111,7 @@ function render() {
             <button class="btn-edit-name" data-id="${r.id}" title="Ubah Nama" style="background:none; border:none; cursor:pointer; font-size:18px; padding:0;">✏️</button>
           </div>
         </td>
-        <td><input type="number" step="0.1" min="0" max="5" value="${avg.toFixed(1)}" data-id="${r.id}" data-field="sa" readonly style="background:#f1f5f9;color:#64748b;"></td>
+        <td><input type="number" step="0.1" min="0" max="5" value="${avg.toFixed(1)}" data-id="${r.id}" data-field="sa" readonly style="background:#e2e8f0;color:#64748b;"></td>
         <td>${selectHtml(r.id,'evidence',r.evidence,['Lengkap','Sebagian','Belum'])}</td>
         <td>${selectHtml(r.id,'qaApip',r.qaApip,['Selesai','Proses','Belum'])}</td>
         <td><input type="number" step="0.1" min="0" max="5" value="${r.mri}" data-id="${r.id}" data-field="mri"></td>
@@ -2145,7 +2133,7 @@ function selectHtml(id, field, value, options) {
 }
 
 function attachHandlers() {
-  // Helper untuk menampilkan indikator proses simpan
+  // Helper untuk menampilkan indikator
   function showIndicator(target, text, className) {
     let ind = target.parentNode.querySelector('.save-indicator');
     if (!ind) {
@@ -2156,11 +2144,12 @@ function attachHandlers() {
     ind.textContent = text;
     ind.className = 'save-indicator ' + className;
     if (className === 'success' || className === 'error') {
-      setTimeout(() => { ind.remove(); }, 2000);
+      setTimeout(() => {
+        ind.remove();
+      }, 2000);
     }
   }
 
-  // INPUT (MRI, IEPK)
   document.querySelectorAll('input[data-id]').forEach(el => {
     if (el.dataset.field === 'sa') return;
     el.onchange = (e) => {
@@ -2173,10 +2162,8 @@ function attachHandlers() {
       else val = e.target.value;
       row[field] = val;
 
-      // Tampilkan indikator "Menyimpan..."
       showIndicator(e.target, '⏳ Menyimpan...', 'saving');
 
-      // Kirim ke server
       callServer('saveField', { opdId: id, field: field, value: val, year: currentYear })
         .then(res => {
           if (res.status === 'error') {
@@ -2194,7 +2181,6 @@ function attachHandlers() {
     el.addEventListener('blur', syncData);
   });
 
-  // SELECT (Evidence, QA APIP, RTP, Status)
   document.querySelectorAll('select[data-id]').forEach(el => {
     el.onchange = (e) => {
       const id = e.target.dataset.id;
@@ -2203,10 +2189,8 @@ function attachHandlers() {
       if (!row) return;
       row[field] = e.target.value;
 
-      // Tampilkan indikator "Menyimpan..."
       showIndicator(e.target, '⏳ Menyimpan...', 'saving');
 
-      // Kirim ke server
       callServer('saveField', { opdId: id, field: field, value: e.target.value, year: currentYear })
         .then(res => {
           if (res.status === 'error') {
@@ -2452,7 +2436,6 @@ function closeConfirmModal() {
   document.getElementById('confirmPassword').value = '';
   document.getElementById('confirmError').style.display = 'none';
 }
-// Toggle password di modal hapus
 document.getElementById('togglePassword').addEventListener('click', function() {
   const input = document.getElementById('confirmPassword');
   if (input.type === 'password') {
@@ -2481,7 +2464,6 @@ document.getElementById('confirmOk').addEventListener('click', async function() 
       return;
     }
 
-    // Panggil server untuk hapus OPD langsung
     const result = await callServer('deleteOpd', { opdId: deleteTargetId, year: currentYear });
     if (result.status === 'error') {
       errorDiv.textContent = '❌ ' + result.message;
@@ -2491,7 +2473,6 @@ document.getElementById('confirmOk').addEventListener('click', async function() 
       return;
     }
 
-    // Muat ulang data agar konsisten
     await loadData();
     closeConfirmModal();
   } catch (err) {
@@ -2505,7 +2486,7 @@ document.getElementById('confirmOk').addEventListener('click', async function() 
   }
 });
 
-// ====== MODAL EDIT SUBUNSUR (URUTKAN SUB UNSUR & PARAMETER) ======
+// ====== MODAL EDIT SUBUNSUR ======
 let editingRowId = null;
 let fileToDelete = null;
 async function openEditModal(id) {
@@ -2644,7 +2625,7 @@ if (totalSize > 10 * 1024 * 1024) {
   });
 }
 
-// ====== UPLOAD FILE (BATAS 10 MB) ======
+// ====== UPLOAD FILE ======
 async function uploadFile(row, subCode, paramId, level, file) {
   if (!file) return;
   if (file.size > 10 * 1024 * 1024) {
@@ -2777,7 +2758,7 @@ document.getElementById('modalSave').addEventListener('click', async function() 
   }
 });
 
-// ====== TAMBAH OPD (CEGAH SPAM) ======
+// ====== TAMBAH OPD ======
 document.getElementById('btnAdd').addEventListener('click', () => {
   document.getElementById('addOpdModal').classList.add('active');
 });
@@ -2814,7 +2795,7 @@ document.getElementById('btnClear').addEventListener('click', function() {
   document.getElementById('confirmModal').classList.add('active');
 });
 
-// ====== TAMBAH TAHUN (CEGAH SPAM & PERBAIKAN BATAL) ======
+// ====== TAMBAH TAHUN ======
 document.getElementById('btnAddYear').addEventListener('click', function() {
   const select = document.getElementById('yearSelect');
   const options = Array.from(select.options).map(o => o.value);
@@ -2878,7 +2859,6 @@ document.getElementById('backupCancel').addEventListener('click', function() {
   document.getElementById('backupModal').classList.remove('active');
 });
 
-// Buka modal konfirmasi backup
 document.getElementById('backupNew').addEventListener('click', function() {
   document.getElementById('confirmBackupModal').classList.add('active');
 });
@@ -2947,7 +2927,6 @@ async function loadBackupList() {
   }
 }
 
-// Restore backup dengan modal konfirmasi
 function restoreBackup(fileName, year) {
   backupToRestore = { fileName, year };
   document.getElementById('confirmRestoreMessage').textContent = `Yakin ingin memulihkan data dari backup "${fileName}"?`;
@@ -2990,7 +2969,6 @@ document.getElementById('confirmRestoreOk').addEventListener('click', async func
   }
 });
 
-// Delete Backup dengan loading state yang responsif
 function openConfirmDeleteBackup(fileName, year) {
   backupToDelete = { fileName, year };
   document.getElementById('confirmDeleteBackupModal').classList.add('active');
@@ -3104,7 +3082,6 @@ if (urlParams.get('access') === 'portal') {
     }
   })();
 }
-
 // ====== SINKRONISASI OTOMATIS SETIAP 5 DETIK ======
 setInterval(async function() {
   if (!isSaving && !pendingSave) {

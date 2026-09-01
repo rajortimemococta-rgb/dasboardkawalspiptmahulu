@@ -3,22 +3,22 @@ const https = require('https');
 
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzsnV0RtLDyo6epqyZOUZ5-TIS6FJwLtGVuELwOS5fZuEqPQ2887UIU70wm6McoEZxHGw/exec';
 
-// Daftar aksi yang HARUS menggunakan POST (karena data besar)
-const POST_ACTIONS = ['saveData', 'uploadFile', 'importData'];
-
 exports.handler = async (event) => {
   try {
     let params = {};
 
+    // Jika request dari client adalah POST, ambil body JSON
     if (event.httpMethod === 'POST') {
       if (event.body) {
         params = JSON.parse(event.body);
       }
     } else {
+      // Jika GET, ambil parameter dari query string
       const url = new URL(event.path, `https://${event.headers.host}`);
       params = Object.fromEntries(url.searchParams);
     }
 
+    // Pastikan action selalu ada
     if (!params.action) {
       const url = new URL(event.path, `https://${event.headers.host}`);
       params.action = url.searchParams.get('action');
@@ -26,9 +26,8 @@ exports.handler = async (event) => {
 
     const action = params.action || '';
 
-    // Jika aksi termasuk POST_ACTIONS, gunakan POST ke Apps Script
-    if (POST_ACTIONS.includes(action)) {
-      // Kirim sebagai POST dengan body JSON
+    // Jika request asli adalah POST, selalu kirim POST ke Apps Script
+    if (event.httpMethod === 'POST') {
       const response = await fetch(APPS_SCRIPT_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -46,7 +45,7 @@ exports.handler = async (event) => {
       };
     }
 
-    // Untuk aksi lainnya, gunakan GET (karena data kecil)
+    // Untuk GET, gunakan query string ke Apps Script
     const queryString = new URLSearchParams(params).toString();
     const targetUrl = APPS_SCRIPT_URL + (queryString ? `?${queryString}` : '');
 

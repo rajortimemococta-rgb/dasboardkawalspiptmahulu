@@ -286,7 +286,7 @@ button:disabled {
   margin: 0;
 }
 
-/* ===== TABEL ===== */
+/* ===== TABEL (GRADIEN WARNA BARIS) ===== */
 .table-wrap {
   overflow-x: auto;
   border-radius: 12px;
@@ -306,28 +306,49 @@ thead th {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: #475569;
-  border-bottom: 2px solid var(--border);
+  color: #ffffff;
+  border-bottom: none;
   padding: 16px 12px;
-  background: #f8fafc;
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
 }
 
 tbody td {
   padding: 14px 10px;
   border-bottom: 1px solid var(--border);
   vertical-align: middle;
-  background: #ffffff;
+  color: #1e293b;
+}
+
+/* Baris 1 – Biru Muda */
+tbody tr:nth-child(4n+1) td {
+  background: linear-gradient(90deg, #eff6ff 0%, #f8fafc 100%);
+}
+
+/* Baris 2 – Hijau Muda */
+tbody tr:nth-child(4n+2) td {
+  background: linear-gradient(90deg, #ecfdf5 0%, #f8fafc 100%);
+}
+
+/* Baris 3 – Kuning Muda */
+tbody tr:nth-child(4n+3) td {
+  background: linear-gradient(90deg, #fffbeb 0%, #f8fafc 100%);
+}
+
+/* Baris 4 – Ungu Muda */
+tbody tr:nth-child(4n+4) td {
+  background: linear-gradient(90deg, #f5f3ff 0%, #f8fafc 100%);
 }
 
 tbody tr:hover td {
-  background: #f8fafc;
+  background: #f1f5f9 !important;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.03);
 }
 
 input[type="text"],
 input[type="number"],
 select {
   width: 100%;
-  background: var(--surface);
+  background: rgba(255, 255, 255, 0.7);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 10px 12px;
@@ -346,6 +367,33 @@ select:focus {
   outline: none;
   border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  background: #ffffff;
+}
+
+/* ===== INDIKATOR SUKSES SIMPAN ===== */
+.save-indicator {
+  display: inline-block;
+  margin-left: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  animation: savedFadeIn 0.3s ease;
+}
+
+.save-indicator.saving {
+  color: #f59e0b;
+}
+
+.save-indicator.success {
+  color: #10b981;
+}
+
+.save-indicator.error {
+  color: #ef4444;
+}
+
+@keyframes savedFadeIn {
+  from { opacity: 0; transform: translateY(-2px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ===== BADGE ===== */
@@ -452,7 +500,7 @@ select:focus {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
 }
 
-/* ===== MODAL GRAFIK KPI - ELEGAN & MODERN ===== */
+/* ===== MODAL GRAFIK KPI ===== */
 #kpiChartModal .modal {
   background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #ffffff 100%);
   border: 1px solid rgba(59, 130, 246, 0.2);
@@ -466,15 +514,6 @@ select:focus {
 @keyframes popIn {
   from { transform: scale(0.85) translateY(10px); opacity: 0; }
   to { transform: scale(1) translateY(0); opacity: 1; }
-}
-
-#kpiChartModal .modal-header {
-  border-bottom: none;
-  padding-bottom: 8px;
-  margin-bottom: 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 #kpiChartModal .modal-header h3 {
@@ -1469,78 +1508,6 @@ input[type="file"]:hover {
   font-size: 18px;
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
-   /* ===== INDIKATOR SUKSES SIMPAN ===== */
-.saved-indicator {
-  color: #10b981;
-  font-size: 12px;
-  font-weight: bold;
-  margin-left: 4px;
-  display: inline-block;
-  animation: savedFadeIn 0.3s ease;
-}
-@keyframes savedFadeIn {
-  from { opacity: 0; transform: translateY(-2px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-   /* Indikator simpan per kolom */
-.save-indicator {
-  display: inline-block;
-  margin-left: 6px;
-  font-size: 12px;
-  font-weight: 600;
-  transition: opacity 0.3s;
-}
-.save-indicator.saving {
-  color: #f59e0b; /* Oranye = sedang menyimpan */
-}
-.save-indicator.success {
-  color: #10b981; /* Hijau = berhasil */
-}
-.save-indicator.error {
-  color: #ef4444; /* Merah = gagal */
-}
-   /* ============================================================
-   TAMPILAN BARIS TABEL – GRADIEN WARNA BERBEDA PER OPD
-   ============================================================ */
-tbody tr {
-  transition: all 0.3s ease;
-}
-
-/* Baris 1 – Biru Muda Elegan */
-tbody tr:nth-child(4n+1) td {
-  background: linear-gradient(90deg, #eff6ff 0%, #f8fafc 100%);
-  border-bottom: 1px solid #e0e7ff;
-}
-
-/* Baris 2 – Hijau Muda Segar */
-tbody tr:nth-child(4n+2) td {
-  background: linear-gradient(90deg, #ecfdf5 0%, #f8fafc 100%);
-  border-bottom: 1px solid #d1fae5;
-}
-
-/* Baris 3 – Kuning Lembut Hangat */
-tbody tr:nth-child(4n+3) td {
-  background: linear-gradient(90deg, #fffbeb 0%, #f8fafc 100%);
-  border-bottom: 1px solid #fef3c7;
-}
-
-/* Baris 4 – Ungu Pastel Menawan */
-tbody tr:nth-child(4n+4) td {
-  background: linear-gradient(90deg, #f5f3ff 0%, #f8fafc 100%);
-  border-bottom: 1px solid #ede9fe;
-}
-
-/* Warna teks pada baris agar tetap terbaca */
-tbody td {
-  color: #1e293b;
-}
-
-/* Efek hover – sorot baris dengan bayangan lembut */
-tbody tr:hover td {
-  background: #f8fafc !important;
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.03);
-  cursor: default;
-}
 </style>
 </head>
 <body>
@@ -1829,7 +1796,6 @@ let isCreatingBackup = false;
 let isRestoringBackup = false;
 let isDeletingFile = false;
 
-// Queue untuk menyimpan data agar tidak bentrok
 let isSaving = false;
 let pendingSave = false;
 let chartInstance = null;
@@ -1859,6 +1825,7 @@ function callServer(action, params = {}) {
       throw error;
     });
 }
+
 // ====== VERIFIKASI PASSWORD ======
 async function verifyAccess(password) {
   try {
@@ -1880,7 +1847,7 @@ async function verifyDelete(password) {
   }
 }
 
-// ====== LOAD TAHUN (UNIK) ======
+// ====== LOAD TAHUN ======
 async function loadYears() {
   try {
     const years = await callServer('getYears');
@@ -1919,7 +1886,6 @@ async function loadData() {
       mri: r.mri || 0,
       iepk: r.iepk || 0
     }));
-    // Simpan salinan data awal untuk deteksi perubahan (DEEP COPY)
     originalRows = JSON.parse(JSON.stringify(rows));
     
     status.textContent = '✅ Data dimuat';
@@ -2015,8 +1981,7 @@ function applyKpis(kpi) {
   setText('kpiIEPKNote', kpi.iepkCount + ' OPD terisi');
 }
 
-// ====== SAVE DATA (DEBOUNCE + QUEUE) ======
-// ====== SAVE DATA (DEBOUNCE + QUEUE) ======
+// ====== SAVE DATA (TAMBAH OPD) ======
 function debounceSave() {
   clearTimeout(saveTimer);
   saveTimer = setTimeout(saveData, 800);
@@ -2033,9 +1998,6 @@ async function saveData() {
   const year = currentYear;
 
   try {
-    // Kita TIDAK mengirim seluruh rows lagi.
-    // Fungsi saveData sekarang tidak dipakai untuk perubahan kolom,
-    // tapi masih dipakai untuk menambah OPD baru.
     const result = await callServer('saveData', { rows: JSON.stringify(rows), year });
     if (result.status === 'error') {
       status.textContent = '⚠️ ' + result.message;
@@ -2055,24 +2017,17 @@ async function saveData() {
     }
   }
 }
-   // ====== SINKRONISASI CEPAT (TANPA MENIMPA) ======
+
+// ====== SINKRONISASI ======
 async function syncData() {
   if (isSaving || pendingSave) return;
-  // Simpan dulu nilai yang sedang aktif di input
   const activeElement = document.activeElement;
   if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA' || activeElement.tagName === 'SELECT')) {
-    // Jika sedang fokus, jangan sinkronkan agar tidak mengganggu
     return;
   }
-  // Ambil data terbaru dari server
   await loadData();
 }
-   // ====== SINKRONISASI CEPAT SAAT BLUR ======
-async function syncData() {
-  if (isSaving || pendingSave) return;
-  // Muat ulang data dari server untuk mendapatkan perubahan dari perangkat lain
-  await loadData();
-}
+
 // ====== RENDER TABEL ======
 function render() {
   const tbody = document.getElementById('tableBody');
@@ -2133,10 +2088,9 @@ function selectHtml(id, field, value, options) {
   return `<select data-id="${id}" data-field="${field}">${opts}</select>`;
 }
 
+// ====== EVENT INPUT & SELECT (DENGAN INDIKATOR) ======
 function attachHandlers() {
-  // Helper untuk menampilkan indikator
   function showIndicator(target, text, className) {
-    // Hapus indikator lama jika ada
     let ind = target.parentNode.querySelector('.save-indicator');
     if (!ind) {
       ind = document.createElement('span');
@@ -2145,17 +2099,13 @@ function attachHandlers() {
     }
     ind.textContent = text;
     ind.className = 'save-indicator ' + className;
-    // Auto hapus setelah 2 detik jika sukses/gagal
     if (className === 'success' || className === 'error') {
-      setTimeout(() => {
-        ind.remove();
-      }, 2000);
+      setTimeout(() => { ind.remove(); }, 2000);
     }
   }
 
-  // INPUT (MRI, IEPK)
   document.querySelectorAll('input[data-id]').forEach(el => {
-    if (el.dataset.field === 'sa') return; // SA readonly tidak diubah
+    if (el.dataset.field === 'sa') return;
     el.onchange = (e) => {
       const id = e.target.dataset.id;
       const field = e.target.dataset.field;
@@ -2167,57 +2117,45 @@ function attachHandlers() {
       else val = e.target.value;
       row[field] = val;
 
-      // Tampilkan indikator "Menyimpan..."
       showIndicator(e.target, '⏳ Menyimpan...', 'saving');
 
-      // Kirim ke server
       callServer('saveField', { opdId: id, field: field, value: val, year: currentYear })
         .then(res => {
           if (res.status === 'error') {
             showIndicator(e.target, '✗ Gagal', 'error');
-            console.error('Gagal simpan field:', res.message);
           } else {
             showIndicator(e.target, '✓', 'success');
           }
         })
         .catch(err => {
           showIndicator(e.target, '✗ Gagal', 'error');
-          console.error('Error saveField:', err);
         });
     };
-    // Saat blur, sinkronkan dari server (tapi jangan ganggu input lain)
     el.addEventListener('blur', syncData);
   });
 
-  // SELECT (Evidence, QA APIP, RTP, Status)
   document.querySelectorAll('select[data-id]').forEach(el => {
     el.onchange = (e) => {
       const id = e.target.dataset.id;
       const field = e.target.dataset.field;
       const row = rows.find(r => r.id === id);
       if (!row) return;
-
       row[field] = e.target.value;
 
-      // Tampilkan indikator "Menyimpan..."
       showIndicator(e.target, '⏳ Menyimpan...', 'saving');
 
-      // Kirim ke server
       callServer('saveField', { opdId: id, field: field, value: e.target.value, year: currentYear })
         .then(res => {
           if (res.status === 'error') {
             showIndicator(e.target, '✗ Gagal', 'error');
-            console.error('Gagal simpan field:', res.message);
           } else {
             showIndicator(e.target, '✓', 'success');
           }
         })
         .catch(err => {
           showIndicator(e.target, '✗ Gagal', 'error');
-          console.error('Error saveField:', err);
         });
     };
-    // Saat blur, sinkronkan dari server (tapi jangan ganggu input lain)
     el.addEventListener('blur', syncData);
   });
 }
@@ -2449,7 +2387,7 @@ function closeConfirmModal() {
   document.getElementById('confirmPassword').value = '';
   document.getElementById('confirmError').style.display = 'none';
 }
-   // Toggle password di modal hapus
+
 document.getElementById('togglePassword').addEventListener('click', function() {
   const input = document.getElementById('confirmPassword');
   if (input.type === 'password') {
@@ -2460,7 +2398,8 @@ document.getElementById('togglePassword').addEventListener('click', function() {
     this.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
   }
 });
-  document.getElementById('confirmOk').addEventListener('click', async function() {
+
+document.getElementById('confirmOk').addEventListener('click', async function() {
   const password = document.getElementById('confirmPassword').value.trim();
   const errorDiv = document.getElementById('confirmError');
   const btnOk = this;
@@ -2478,7 +2417,6 @@ document.getElementById('togglePassword').addEventListener('click', function() {
       return;
     }
 
-    // Panggil server untuk hapus OPD langsung
     const result = await callServer('deleteOpd', { opdId: deleteTargetId, year: currentYear });
     if (result.status === 'error') {
       errorDiv.textContent = '❌ ' + result.message;
@@ -2488,7 +2426,6 @@ document.getElementById('togglePassword').addEventListener('click', function() {
       return;
     }
 
-    // Muat ulang data agar konsisten
     await loadData();
     closeConfirmModal();
   } catch (err) {
@@ -2502,7 +2439,7 @@ document.getElementById('togglePassword').addEventListener('click', function() {
   }
 });
 
-// ====== MODAL EDIT SUBUNSUR (URUTKAN SUB UNSUR & PARAMETER) ======
+// ====== MODAL EDIT SUBUNSUR ======
 let editingRowId = null;
 let fileToDelete = null;
 async function openEditModal(id) {
@@ -2578,12 +2515,12 @@ async function openEditModal(id) {
       const fileList = Array.from(fileInput.files);
       if (fileList.length === 0) return;
 
-const totalSize = fileList.reduce((sum, f) => sum + f.size, 0);
-if (totalSize > 10 * 1024 * 1024) {
-  showWarning('Total ukuran file melebihi 10 MB! Silakan pilih lebih sedikit.');
-  fileInput.value = '';
-  return;
-}
+      const totalSize = fileList.reduce((sum, f) => sum + f.size, 0);
+      if (totalSize > 10 * 1024 * 1024) {
+        showWarning('Total ukuran file melebihi 10 MB! Silakan pilih lebih sedikit.');
+        fileInput.value = '';
+        return;
+      }
 
       const progressContainer = document.querySelector(`.evid-upload-progress[data-sub="${subCode}"][data-param="${paramId}"][data-level="${level}"]`);
       progressContainer.classList.add('active');
@@ -2641,7 +2578,7 @@ if (totalSize > 10 * 1024 * 1024) {
   });
 }
 
-// ====== UPLOAD FILE (BATAS 10 MB) ======
+// ====== UPLOAD FILE ======
 async function uploadFile(row, subCode, paramId, level, file) {
   if (!file) return;
   if (file.size > 10 * 1024 * 1024) {
@@ -2774,7 +2711,7 @@ document.getElementById('modalSave').addEventListener('click', async function() 
   }
 });
 
-// ====== TAMBAH OPD (CEGAH SPAM) ======
+// ====== TAMBAH OPD ======
 document.getElementById('btnAdd').addEventListener('click', () => {
   document.getElementById('addOpdModal').classList.add('active');
 });
@@ -2811,7 +2748,7 @@ document.getElementById('btnClear').addEventListener('click', function() {
   document.getElementById('confirmModal').classList.add('active');
 });
 
-// ====== TAMBAH TAHUN (CEGAH SPAM & PERBAIKAN BATAL) ======
+// ====== TAMBAH TAHUN ======
 document.getElementById('btnAddYear').addEventListener('click', function() {
   const select = document.getElementById('yearSelect');
   const options = Array.from(select.options).map(o => o.value);
@@ -2875,7 +2812,6 @@ document.getElementById('backupCancel').addEventListener('click', function() {
   document.getElementById('backupModal').classList.remove('active');
 });
 
-// Buka modal konfirmasi backup
 document.getElementById('backupNew').addEventListener('click', function() {
   document.getElementById('confirmBackupModal').classList.add('active');
 });
@@ -2944,7 +2880,6 @@ async function loadBackupList() {
   }
 }
 
-// Restore backup dengan modal konfirmasi
 function restoreBackup(fileName, year) {
   backupToRestore = { fileName, year };
   document.getElementById('confirmRestoreMessage').textContent = `Yakin ingin memulihkan data dari backup "${fileName}"?`;
@@ -2987,7 +2922,6 @@ document.getElementById('confirmRestoreOk').addEventListener('click', async func
   }
 });
 
-// Delete Backup dengan loading state yang responsif
 function openConfirmDeleteBackup(fileName, year) {
   backupToDelete = { fileName, year };
   document.getElementById('confirmDeleteBackupModal').classList.add('active');
@@ -3101,6 +3035,7 @@ if (urlParams.get('access') === 'portal') {
     }
   })();
 }
+
 // ====== SINKRONISASI OTOMATIS SETIAP 5 DETIK ======
 setInterval(async function() {
   if (!isSaving && !pendingSave) {

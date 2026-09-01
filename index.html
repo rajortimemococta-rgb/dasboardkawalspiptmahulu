@@ -286,142 +286,155 @@ button:disabled {
   margin: 0;
 }
 
-/* ===== TABEL (GRADIEN WARNA BARIS) ===== */
+/* ============================================================
+   TABEL MODERN – WARNA KOLOM BERBEDA & SELARAS
+   ============================================================ */
 .table-wrap {
   overflow-x: auto;
   border-radius: 12px;
   border: 1px solid var(--border);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   font-size: 13px;
   min-width: 1100px;
 }
 
+/* HEADER TABEL – Gradien Gelap Modern */
 thead th {
   text-align: left;
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
   color: #ffffff;
-  border-bottom: none;
-  padding: 16px 12px;
   background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+  padding: 16px 12px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
-tbody td {
-  padding: 14px 10px;
-  border-bottom: 1px solid var(--border);
-  vertical-align: middle;
-  color: #1e293b;
+/* ===== WARNA LATAR KOLOM ===== */
+
+/* Kolom Nomor (No.) */
+tbody td:nth-child(1) {
+  background: #f0f9ff;
+  font-weight: 600;
+  text-align: center;
+  color: #0f172a;
 }
 
-/* Baris 1 – Biru Muda */
-tbody tr:nth-child(4n+1) td {
-  background: linear-gradient(90deg, #eff6ff 0%, #f8fafc 100%);
+/* Kolom OPD */
+tbody td:nth-child(2) {
+  background: #eff6ff;
+  font-weight: 600;
+  color: #1e3a5f;
 }
 
-/* Baris 2 – Hijau Muda */
-tbody tr:nth-child(4n+2) td {
-  background: linear-gradient(90deg, #ecfdf5 0%, #f8fafc 100%);
+/* Kolom SA */
+tbody td:nth-child(3) {
+  background: #f0fdf4;
 }
 
-/* Baris 3 – Kuning Muda */
-tbody tr:nth-child(4n+3) td {
-  background: linear-gradient(90deg, #fffbeb 0%, #f8fafc 100%);
+/* Kolom Evidence */
+tbody td:nth-child(4) {
+  background: #fefce8;
 }
 
-/* Baris 4 – Ungu Muda */
-tbody tr:nth-child(4n+4) td {
-  background: linear-gradient(90deg, #f5f3ff 0%, #f8fafc 100%);
+/* Kolom QA APIP */
+tbody td:nth-child(5) {
+  background: #fef2f2;
 }
 
-tbody tr:hover td {
-  background: #f1f5f9 !important;
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.03);
+/* Kolom MRI */
+tbody td:nth-child(6) {
+  background: #f5f3ff;
 }
 
-input[type="text"],
-input[type="number"],
-select {
-  width: 100%;
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 10px 12px;
-  font-size: 13px;
-  font-family: inherit;
-  color: var(--text);
-  transition: border 0.2s, box-shadow 0.2s;
+/* Kolom IEPK */
+tbody td:nth-child(7) {
+  background: #ecfeff;
 }
 
-input[type="number"] {
-  width: 80px;
+/* Kolom RTP */
+tbody td:nth-child(8) {
+  background: #fff7ed;
 }
 
-input:focus,
-select:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+/* Kolom Status */
+tbody td:nth-child(9) {
+  background: #faf5ff;
+}
+
+/* Kolom Kelengkapan */
+tbody td:nth-child(10) {
+  background: #f8fafc;
+}
+
+/* Kolom Detail & Hapus */
+tbody td:nth-child(11),
+tbody td:nth-child(12) {
   background: #ffffff;
 }
 
-/* ===== INDIKATOR SUKSES SIMPAN ===== */
-.save-indicator {
-  display: inline-block;
-  margin-left: 6px;
-  font-size: 12px;
+/* ===== GARIS ANTAR BARIS ===== */
+tbody tr {
+  border-bottom: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+tbody tr:hover td {
+  filter: brightness(0.95);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+/* ===== INPUT & SELECT DI DALAM TABEL ===== */
+tbody input[type="number"],
+tbody select {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-family: inherit;
+  color: #1e293b;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+tbody input[type="number"]:focus,
+tbody select:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+/* Input readonly (SA) */
+tbody input[readonly] {
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+  cursor: not-allowed;
   font-weight: 600;
-  animation: savedFadeIn 0.3s ease;
 }
 
-.save-indicator.saving {
-  color: #f59e0b;
-}
-
-.save-indicator.success {
-  color: #10b981;
-}
-
-.save-indicator.error {
-  color: #ef4444;
-}
-
-@keyframes savedFadeIn {
-  from { opacity: 0; transform: translateY(-2px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ===== BADGE ===== */
+/* ===== BADGE KELENGKAPAN ===== */
 .badge {
   display: inline-block;
   font-size: 12px;
-  font-weight: 600;
-  padding: 4px 14px;
+  font-weight: 700;
+  padding: 6px 14px;
   border-radius: 20px;
-  letter-spacing: 0.2px;
-}
-
-.badge-selesai,
-.badge-lengkap {
-  background: var(--green-bg);
-  color: var(--green);
-}
-
-.badge-proses,
-.badge-sebagian {
-  background: var(--orange-bg);
-  color: var(--orange);
-}
-
-.badge-belum,
-.badge-kosong {
-  background: var(--red-bg);
-  color: var(--red);
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 /* ===== TOMBOL AKSI TABEL ===== */
@@ -500,7 +513,7 @@ select:focus {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
 }
 
-/* ===== MODAL GRAFIK KPI ===== */
+/* ===== MODAL GRAFIK KPI - ELEGAN & MODERN ===== */
 #kpiChartModal .modal {
   background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #ffffff 100%);
   border: 1px solid rgba(59, 130, 246, 0.2);
@@ -514,6 +527,15 @@ select:focus {
 @keyframes popIn {
   from { transform: scale(0.85) translateY(10px); opacity: 0; }
   to { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+#kpiChartModal .modal-header {
+  border-bottom: none;
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 #kpiChartModal .modal-header h3 {
@@ -1508,6 +1530,36 @@ input[type="file"]:hover {
   font-size: 18px;
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
+
+/* ===== INDIKATOR PROSES SIMPAN ===== */
+.save-indicator {
+  display: inline-block;
+  margin-left: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  transition: opacity 0.3s;
+}
+.save-indicator.saving {
+  color: #f59e0b; /* Oranye = sedang menyimpan */
+}
+.save-indicator.success {
+  color: #10b981; /* Hijau = berhasil */
+}
+.save-indicator.error {
+  color: #ef4444; /* Merah = gagal */
+}
+.saved-indicator {
+  color: #10b981;
+  font-size: 12px;
+  font-weight: bold;
+  margin-left: 4px;
+  display: inline-block;
+  animation: savedFadeIn 0.3s ease;
+}
+@keyframes savedFadeIn {
+  from { opacity: 0; transform: translateY(-2px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 </style>
 </head>
 <body>
@@ -1796,6 +1848,7 @@ let isCreatingBackup = false;
 let isRestoringBackup = false;
 let isDeletingFile = false;
 
+// Queue untuk menyimpan data agar tidak bentrok
 let isSaving = false;
 let pendingSave = false;
 let chartInstance = null;
@@ -1825,7 +1878,6 @@ function callServer(action, params = {}) {
       throw error;
     });
 }
-
 // ====== VERIFIKASI PASSWORD ======
 async function verifyAccess(password) {
   try {
@@ -1847,7 +1899,7 @@ async function verifyDelete(password) {
   }
 }
 
-// ====== LOAD TAHUN ======
+// ====== LOAD TAHUN (UNIK) ======
 async function loadYears() {
   try {
     const years = await callServer('getYears');
@@ -1886,6 +1938,7 @@ async function loadData() {
       mri: r.mri || 0,
       iepk: r.iepk || 0
     }));
+    // Simpan salinan data awal untuk deteksi perubahan (DEEP COPY)
     originalRows = JSON.parse(JSON.stringify(rows));
     
     status.textContent = '✅ Data dimuat';
@@ -1981,7 +2034,7 @@ function applyKpis(kpi) {
   setText('kpiIEPKNote', kpi.iepkCount + ' OPD terisi');
 }
 
-// ====== SAVE DATA (TAMBAH OPD) ======
+// ====== SAVE DATA (DEBOUNCE + QUEUE) ======
 function debounceSave() {
   clearTimeout(saveTimer);
   saveTimer = setTimeout(saveData, 800);
@@ -1998,6 +2051,7 @@ async function saveData() {
   const year = currentYear;
 
   try {
+    // Kirim seluruh rows untuk penambahan OPD baru (fitur tambah)
     const result = await callServer('saveData', { rows: JSON.stringify(rows), year });
     if (result.status === 'error') {
       status.textContent = '⚠️ ' + result.message;
@@ -2018,13 +2072,15 @@ async function saveData() {
   }
 }
 
-// ====== SINKRONISASI ======
+// ====== SINKRONISASI CEPAT ======
 async function syncData() {
   if (isSaving || pendingSave) return;
+  // Jangan sinkronkan jika sedang fokus di input/select
   const activeElement = document.activeElement;
   if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA' || activeElement.tagName === 'SELECT')) {
     return;
   }
+  // Ambil data terbaru dari server
   await loadData();
 }
 
@@ -2067,7 +2123,7 @@ function render() {
             <button class="btn-edit-name" data-id="${r.id}" title="Ubah Nama" style="background:none; border:none; cursor:pointer; font-size:18px; padding:0;">✏️</button>
           </div>
         </td>
-        <td><input type="number" step="0.1" min="0" max="5" value="${avg.toFixed(1)}" data-id="${r.id}" data-field="sa" readonly style="background:#e2e8f0;color:#64748b;"></td>
+        <td><input type="number" step="0.1" min="0" max="5" value="${avg.toFixed(1)}" data-id="${r.id}" data-field="sa" readonly style="background:#f1f5f9;color:#64748b;"></td>
         <td>${selectHtml(r.id,'evidence',r.evidence,['Lengkap','Sebagian','Belum'])}</td>
         <td>${selectHtml(r.id,'qaApip',r.qaApip,['Selesai','Proses','Belum'])}</td>
         <td><input type="number" step="0.1" min="0" max="5" value="${r.mri}" data-id="${r.id}" data-field="mri"></td>
@@ -2088,8 +2144,8 @@ function selectHtml(id, field, value, options) {
   return `<select data-id="${id}" data-field="${field}">${opts}</select>`;
 }
 
-// ====== EVENT INPUT & SELECT (DENGAN INDIKATOR) ======
 function attachHandlers() {
+  // Helper untuk menampilkan indikator proses simpan
   function showIndicator(target, text, className) {
     let ind = target.parentNode.querySelector('.save-indicator');
     if (!ind) {
@@ -2104,6 +2160,7 @@ function attachHandlers() {
     }
   }
 
+  // INPUT (MRI, IEPK)
   document.querySelectorAll('input[data-id]').forEach(el => {
     if (el.dataset.field === 'sa') return;
     el.onchange = (e) => {
@@ -2111,29 +2168,33 @@ function attachHandlers() {
       const field = e.target.dataset.field;
       const row = rows.find(r => r.id === id);
       if (!row) return;
-
       let val = e.target.value;
       if (field === 'mri' || field === 'iepk') val = parseFloat(val) || 0;
       else val = e.target.value;
       row[field] = val;
 
+      // Tampilkan indikator "Menyimpan..."
       showIndicator(e.target, '⏳ Menyimpan...', 'saving');
 
+      // Kirim ke server
       callServer('saveField', { opdId: id, field: field, value: val, year: currentYear })
         .then(res => {
           if (res.status === 'error') {
             showIndicator(e.target, '✗ Gagal', 'error');
+            console.error('Gagal simpan field:', res.message);
           } else {
             showIndicator(e.target, '✓', 'success');
           }
         })
         .catch(err => {
           showIndicator(e.target, '✗ Gagal', 'error');
+          console.error('Error saveField:', err);
         });
     };
     el.addEventListener('blur', syncData);
   });
 
+  // SELECT (Evidence, QA APIP, RTP, Status)
   document.querySelectorAll('select[data-id]').forEach(el => {
     el.onchange = (e) => {
       const id = e.target.dataset.id;
@@ -2142,18 +2203,22 @@ function attachHandlers() {
       if (!row) return;
       row[field] = e.target.value;
 
+      // Tampilkan indikator "Menyimpan..."
       showIndicator(e.target, '⏳ Menyimpan...', 'saving');
 
+      // Kirim ke server
       callServer('saveField', { opdId: id, field: field, value: e.target.value, year: currentYear })
         .then(res => {
           if (res.status === 'error') {
             showIndicator(e.target, '✗ Gagal', 'error');
+            console.error('Gagal simpan field:', res.message);
           } else {
             showIndicator(e.target, '✓', 'success');
           }
         })
         .catch(err => {
           showIndicator(e.target, '✗ Gagal', 'error');
+          console.error('Error saveField:', err);
         });
     };
     el.addEventListener('blur', syncData);
@@ -2387,7 +2452,7 @@ function closeConfirmModal() {
   document.getElementById('confirmPassword').value = '';
   document.getElementById('confirmError').style.display = 'none';
 }
-
+// Toggle password di modal hapus
 document.getElementById('togglePassword').addEventListener('click', function() {
   const input = document.getElementById('confirmPassword');
   if (input.type === 'password') {
@@ -2398,7 +2463,6 @@ document.getElementById('togglePassword').addEventListener('click', function() {
     this.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
   }
 });
-
 document.getElementById('confirmOk').addEventListener('click', async function() {
   const password = document.getElementById('confirmPassword').value.trim();
   const errorDiv = document.getElementById('confirmError');
@@ -2417,6 +2481,7 @@ document.getElementById('confirmOk').addEventListener('click', async function() 
       return;
     }
 
+    // Panggil server untuk hapus OPD langsung
     const result = await callServer('deleteOpd', { opdId: deleteTargetId, year: currentYear });
     if (result.status === 'error') {
       errorDiv.textContent = '❌ ' + result.message;
@@ -2426,6 +2491,7 @@ document.getElementById('confirmOk').addEventListener('click', async function() 
       return;
     }
 
+    // Muat ulang data agar konsisten
     await loadData();
     closeConfirmModal();
   } catch (err) {
@@ -2439,7 +2505,7 @@ document.getElementById('confirmOk').addEventListener('click', async function() 
   }
 });
 
-// ====== MODAL EDIT SUBUNSUR ======
+// ====== MODAL EDIT SUBUNSUR (URUTKAN SUB UNSUR & PARAMETER) ======
 let editingRowId = null;
 let fileToDelete = null;
 async function openEditModal(id) {
@@ -2515,12 +2581,12 @@ async function openEditModal(id) {
       const fileList = Array.from(fileInput.files);
       if (fileList.length === 0) return;
 
-      const totalSize = fileList.reduce((sum, f) => sum + f.size, 0);
-      if (totalSize > 10 * 1024 * 1024) {
-        showWarning('Total ukuran file melebihi 10 MB! Silakan pilih lebih sedikit.');
-        fileInput.value = '';
-        return;
-      }
+const totalSize = fileList.reduce((sum, f) => sum + f.size, 0);
+if (totalSize > 10 * 1024 * 1024) {
+  showWarning('Total ukuran file melebihi 10 MB! Silakan pilih lebih sedikit.');
+  fileInput.value = '';
+  return;
+}
 
       const progressContainer = document.querySelector(`.evid-upload-progress[data-sub="${subCode}"][data-param="${paramId}"][data-level="${level}"]`);
       progressContainer.classList.add('active');
@@ -2578,7 +2644,7 @@ async function openEditModal(id) {
   });
 }
 
-// ====== UPLOAD FILE ======
+// ====== UPLOAD FILE (BATAS 10 MB) ======
 async function uploadFile(row, subCode, paramId, level, file) {
   if (!file) return;
   if (file.size > 10 * 1024 * 1024) {
@@ -2711,7 +2777,7 @@ document.getElementById('modalSave').addEventListener('click', async function() 
   }
 });
 
-// ====== TAMBAH OPD ======
+// ====== TAMBAH OPD (CEGAH SPAM) ======
 document.getElementById('btnAdd').addEventListener('click', () => {
   document.getElementById('addOpdModal').classList.add('active');
 });
@@ -2748,7 +2814,7 @@ document.getElementById('btnClear').addEventListener('click', function() {
   document.getElementById('confirmModal').classList.add('active');
 });
 
-// ====== TAMBAH TAHUN ======
+// ====== TAMBAH TAHUN (CEGAH SPAM & PERBAIKAN BATAL) ======
 document.getElementById('btnAddYear').addEventListener('click', function() {
   const select = document.getElementById('yearSelect');
   const options = Array.from(select.options).map(o => o.value);
@@ -2812,6 +2878,7 @@ document.getElementById('backupCancel').addEventListener('click', function() {
   document.getElementById('backupModal').classList.remove('active');
 });
 
+// Buka modal konfirmasi backup
 document.getElementById('backupNew').addEventListener('click', function() {
   document.getElementById('confirmBackupModal').classList.add('active');
 });
@@ -2880,6 +2947,7 @@ async function loadBackupList() {
   }
 }
 
+// Restore backup dengan modal konfirmasi
 function restoreBackup(fileName, year) {
   backupToRestore = { fileName, year };
   document.getElementById('confirmRestoreMessage').textContent = `Yakin ingin memulihkan data dari backup "${fileName}"?`;
@@ -2922,6 +2990,7 @@ document.getElementById('confirmRestoreOk').addEventListener('click', async func
   }
 });
 
+// Delete Backup dengan loading state yang responsif
 function openConfirmDeleteBackup(fileName, year) {
   backupToDelete = { fileName, year };
   document.getElementById('confirmDeleteBackupModal').classList.add('active');
